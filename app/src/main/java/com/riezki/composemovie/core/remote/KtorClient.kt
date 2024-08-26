@@ -40,7 +40,7 @@ class KtorClient(private val context: Context) {
             defaultRequest {
                 url {
                     protocol = URLProtocol.HTTPS
-                    host = "api.themoviedb.org/3/"
+                    host = "api.themoviedb.org/3"
                 }
             }
 

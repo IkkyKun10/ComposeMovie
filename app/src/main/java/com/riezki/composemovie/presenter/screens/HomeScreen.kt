@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,6 +36,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.riezki.composemovie.R
+import com.riezki.composemovie.presenter.ui.theme.ComposeMovieTheme
 import com.riezki.composemovie.presenter.viewmodel.MovieListUiEvent
 import com.riezki.composemovie.presenter.viewmodel.MovieViewModel
 import com.riezki.composemovie.utils.Screen
@@ -46,11 +48,11 @@ import com.riezki.composemovie.utils.Screen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    navController: NavHostController
+    bottomNavController: NavHostController = rememberNavController(),
+    onClickToDetail: (Int) -> Unit,
 ) {
     val movieListViewModel = hiltViewModel<MovieViewModel>()
     val movieListState by movieListViewModel.movieListState.collectAsState()
-    val bottomNavController = rememberNavController()
 
     Scaffold(
         bottomBar = {
@@ -86,10 +88,22 @@ fun HomeScreen(
                 startDestination = Screen.PopularMovieList.route
             ) {
                 composable(Screen.PopularMovieList.route) {
-
+                    PopularMoviesScreen(
+                        movieListState = movieListState,
+                        onEvent = movieListViewModel::onEvent,
+                        onClikedItem = {
+                            it.id?.let(onClickToDetail)
+                        }
+                    )
                 }
                 composable(Screen.UpcomingMovieList.route) {
-
+                    UpcomingMoviesScreen(
+                        movieListState = movieListState,
+                        onEvent = movieListViewModel::onEvent,
+                        onClikedItem = {
+                            it.id?.let(onClickToDetail)
+                        }
+                    )
                 }
             }
         }
@@ -99,7 +113,7 @@ fun HomeScreen(
 @Composable
 fun BottomNavigationBar(
     bottomNavHostController: NavHostController,
-    onEvent: (MovieListUiEvent) -> Unit
+    onEvent: (MovieListUiEvent) -> Unit,
 ) {
     val items = listOf(
         BottomItem(
@@ -161,5 +175,13 @@ fun BottomNavigationBar(
 
 data class BottomItem(
     val title: String,
-    val icon: ImageVector
+    val icon: ImageVector,
 )
+
+@Preview
+@Composable
+fun HomeScreenPrev() {
+    ComposeMovieTheme {
+        HomeScreen {}
+    }
+}

@@ -17,6 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.riezki.composemovie.presenter.screens.DetailScreen
 import com.riezki.composemovie.presenter.screens.HomeScreen
 import com.riezki.composemovie.presenter.ui.theme.ComposeMovieTheme
 import com.riezki.composemovie.utils.Screen
@@ -42,14 +43,18 @@ class MainActivity : ComponentActivity() {
                         startDestination = Screen.Home.route
                     ) {
                         composable(Screen.Home.route) {
-                            HomeScreen(navController)
+                            HomeScreen(
+                                onClickToDetail = {
+                                    navController.navigate(Screen.Details.route + "/${it}")
+                                }
+                            )
                         }
                         composable(Screen.Details.route + "/{movieId}",
                             arguments = listOf(
-                                navArgument("movieId") {type = NavType.IntType}
+                                navArgument("movieId") { type = NavType.IntType }
                             )
-                        ) { backStackEntry ->
-
+                        ) {
+                            DetailScreen()
                         }
                     }
                 }
@@ -59,7 +64,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun SetBarColor(
-        color: Color
+        color: Color,
     ) {
         val systemUiController = rememberSystemUiController()
         LaunchedEffect(key1 = color) {

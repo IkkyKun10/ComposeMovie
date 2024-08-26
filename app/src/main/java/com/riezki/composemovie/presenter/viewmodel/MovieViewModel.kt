@@ -72,7 +72,11 @@ class MovieViewModel @Inject constructor(
                             it.copy(
                                 popularMovies = movieListState.value.popularMovies
                                         + popularMovies.shuffled(),
-                                popularMovieListPage = movieListState.value.popularMovieListPage + 1
+                                popularMovieListPage = if (!forceFetchFromRemote) {
+                                    1
+                                } else {
+                                    movieListState.value.popularMovieListPage + 1
+                                }
                             )
                         }
                     }
@@ -87,7 +91,7 @@ class MovieViewModel @Inject constructor(
         }
     }
 
-    fun getUpcomingMovies(forceFetchFromRemote: Boolean) = viewModelScope.launch {
+    private fun getUpcomingMovies(forceFetchFromRemote: Boolean) = viewModelScope.launch {
         _movieListState.update {
             it.copy(isLoading = true)
         }
@@ -110,7 +114,11 @@ class MovieViewModel @Inject constructor(
                             it.copy(
                                 upcomingMovies = movieListState.value.upcomingMovies
                                         + upcomingMovies.shuffled(),
-                                upcomingMovieListPage = movieListState.value.upcomingMovieListPage + 1
+                                upcomingMovieListPage = if (!forceFetchFromRemote) {
+                                    1
+                                } else {
+                                    movieListState.value.upcomingMovieListPage + 1
+                                }
                             )
                         }
                     }
