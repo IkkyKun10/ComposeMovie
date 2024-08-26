@@ -14,6 +14,8 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.get
 import io.ktor.http.URLProtocol
+import io.ktor.http.encodedPath
+import io.ktor.http.parseAndSortContentTypeHeader
 import io.ktor.http.path
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
@@ -65,6 +67,7 @@ class KtorClient(private val context: Context) {
 
     suspend fun getMovieList(category: String, page: Int) = client.get {
         url {
+//            encodedPath = "movie/$category"
             path("movie/$category")
             parameters.append("api_key", API_KEY)
             parameters.append("page", "$page")
